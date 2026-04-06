@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/dev/null echo:*)",
+      "Bash(/dev/null du:*)",
+      "Bash(xargs grep:*)",
+      "Bash(find '/c/Users/kauan/Desktop/computaria/organizando-meus-codigos/server_lan_mine_github/server/minecraft server 1.21.1/config/' -name *pathogen* -o -name *infect* -o -name *spore*)",
+      "Bash(find '/c/Users/kauan/Desktop/computaria/organizando-meus-codigos/server_lan_mine_github/server/minecraft server 1.21.1/moddata/' -iname *pathogen*)",
+      "Bash(head -20 find '/c/Users/kauan/Desktop/computaria/organizando-meus-codigos/server_lan_mine_github/server/minecraft server 1.21.1/' -maxdepth 3 -iname *pathogen*)",
+      "Bash(sort echo:*)"
+    ]
+  }
+}

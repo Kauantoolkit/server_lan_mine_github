@@ -1,0 +1,20 @@
+{
+  "player_name": "Kauan",
+
+  "server_path": "./server",
+
+  "start_command": ["java", "@user_jvm_args.txt", "@libraries/net/neoforged/neoforge/21.1.218/win_args.txt", "nogui"],
+
+  "backup_interval_minutes": 15,
+
+  "rcon": {
+    "host": "127.0.0.1",
+    "port": 25575,
+    "password": ""
+  },
+
+  "git": {
+    "remote_url": "https://github.com/SEU_USUARIO/SEU_REPO.git",
+    "branch": "main"
+  }
+}

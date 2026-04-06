@@ -1,0 +1,147 @@
+{
+    "factions": [
+        {
+            "id": "illagers",
+            "include": {
+                "entity_types": [
+                    "minecraft:ravager",
+                    "companions:illager_golem"
+                ],
+                "interfaces": [
+                    "net.minecraft.world.entity.monster.AbstractIllager"
+                ],
+                "namespaces": [
+                    "hunters_return",
+                    "illagerinvasion",
+                    "takesapillage",
+                    "raided"
+                ],
+                "tags": [
+                    "minecraft:illager"
+                ]
+            },
+            "exclude": {
+                "entity_types": [],
+                "interfaces": [],
+                "namespaces": [
+                    "born_in_chaos_v1"
+                ],
+                "tags": []
+            },
+            "relation": {
+                "enemy_factions": [
+                    "undead",
+                    "vampires",
+                    "vampire_hunters",
+                    "werewolves"
+                ],
+                "ally_factions": []
+            }
+        },
+        {
+            "id": "undead",
+            "include": {
+                "entity_types": [],
+                "interfaces": [
+                    "net.minecraft.world.entity.monster.AbstractSkeleton",
+                    "net.minecraft.world.entity.monster.Zombie"
+                ],
+                "namespaces": [
+                    "born_in_chaos_v1",
+                    "rottencreatures",
+                    "undead_revamp2"
+                ],
+                "tags": [
+                    "minecraft:undead"
+                ]
+            },
+            "exclude": {
+                "entity_types": [],
+                "interfaces": [],
+                "namespaces": [],
+                "tags": []
+            },
+            "relation": {
+                "enemy_factions": [
+                    "illagers",
+                    "vampire_hunters",
+                    "werewolves"
+                ],
+                "ally_factions": []
+            }
+        },
+        {
+            "id": "vampires",
+            "include": {
+                "entity_types": [],
+                "interfaces": [],
+                "namespaces": [],
+                "tags": [
+                    "vampirism:vampire"
+                ]
+            },
+            "exclude": {
+                "entity_types": [],
+                "interfaces": [],
+                "namespaces": [],
+                "tags": []
+            },
+            "relation": {
+                "enemy_factions": [
+                    "illagers"
+                ],
+                "ally_factions": [
+                    "undead"
+                ]
+            }
+        },
+        {
+            "id": "vampire_hunters",
+            "include": {
+                "entity_types": [],
+                "interfaces": [],
+                "namespaces": [],
+                "tags": [
+                    "vampirism:hunter"
+                ]
+            },
+            "exclude": {
+                "entity_types": [],
+                "interfaces": [],
+                "namespaces": [],
+                "tags": []
+            },
+            "relation": {
+                "enemy_factions": [
+                    "illagers",
+                    "undead"
+                ],
+                "ally_factions": []
+            }
+        },
+        {
+            "id": "werewolves",
+            "include": {
+                "entity_types": [],
+                "interfaces": [],
+                "namespaces": [
+                    "werewolves"
+                ],
+                "tags": []
+            },
+            "exclude": {
+                "entity_types": [],
+                "interfaces": [],
+                "namespaces": [],
+                "tags": []
+            },
+            "relation": {
+                "enemy_factions": [
+                    "illagers",
+                    "undead"
+                ],
+                "ally_factions": []
+            }
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+#Server Settings for Late Game Golem
+[lgg_entity]
+	#Golems can be angry at players.
+	lgg_entity_angry_at_player = false
+	#Golem's target whitelist. Golem will not harm(bullet, flame etc.), attack or retaliate
+	lgg_entity_target_whitelist = ["modid:mobname", "modid:mobname2"]
+	#Minigun's Accuracy, higher value = less accurate
+	# Default: 3.0
+	# Range: 0.0 ~ 30.0
+	lgg_minigun_accuracy = 3.0

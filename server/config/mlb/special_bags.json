@@ -1,0 +1,23 @@
+{
+  "enable_cursed_bag": true,
+  "enable_sound": true,
+  "events": [
+    "summon minecraft:warden ~ ~ ~",
+    "place structure minecraft:ancient_city",
+    "weather thunder",
+    "tp @p ~ ~-40 ~",
+    "effect give @p minecraft:blindness 10",
+    "summon minecraft:tnt ~ ~ ~ {Fuse:40}",
+    "summon minecraft:wither ~ ~ ~",
+    "summon minecraft:zombie ~ ~ ~ {IsBaby:1}",
+    "summon minecraft:firework_rocket ~ ~ ~ {Life:20,LifeTime:40}",
+    "xp add @p 50",
+    "xp add @p 100",
+    "xp add @p 500",
+    "place structure minecraft:village_plains",
+    "place structure minecraft:village_desert",
+    "place structure minecraft:ruined_portal",
+    "place structure minecraft:pillager_outpost",
+    "place structure minecraft:jungle_temple"
+  ]
+}

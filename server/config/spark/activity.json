@@ -1,0 +1,15 @@
+[
+  {
+    "user": {
+      "type": "player",
+      "name": "WillTheGreen",
+      "uniqueId": "38af9bd3-1831-4838-8148-2790e2fee9f5"
+    },
+    "time": 1768564515127,
+    "type": "Heap dump summary",
+    "data": {
+      "type": "file",
+      "value": "C:\\Users\\kauan\\curseforge\\minecraft\\Instances\\minecraft server 1.21.1\\config\\spark\\heapsummary-2026-01-16_08.55.14.sparkheap"
+    }
+  }
+]

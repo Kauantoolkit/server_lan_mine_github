@@ -1,0 +1,97 @@
+#General
+[general]
+	#Enables ingame rewards on first spawn for Patreons
+	patreon_rewards = true
+
+#Blocks
+[blocks]
+	#If enabled, barbed wire and razor wire destroys items
+	barbed_wire_destroy_items = false
+	#Defines how much damage the Barbed Wire do
+	# Default: 1
+	# Range: 1 ~ 50
+	barbed_wire_damage = 1
+	#Defines how much damage the Barbed Wire Fence do
+	# Default: 1
+	# Range: 1 ~ 50
+	barbed_wire_fence_damage = 1
+	#Defines how much damage the Razor Wire do
+	# Default: 3
+	# Range: 1 ~ 50
+	razor_wire_damage = 3
+	#Defines how much damage the Bear Trap do
+	# Default: 1
+	# Range: 1 ~ 50
+	bear_trap_damage = 1
+	#Defines how big the explosion radius from a Chest Bombs is
+	# Default: 3
+	# Range: 1 ~ 50
+	chest_bomb_explosion_radius = 3
+	#Defines how big the explosion radius from the Mines is
+	# Default: 5
+	# Range: 1 ~ 100
+	mine_explosion_radius = 5
+	#Defines how much damage the Mines do
+	# Default: 10
+	# Range: 1 ~ 100
+	mine_damage = 10
+	#Defines how much damage the Nail Traps do
+	# Default: 1
+	# Range: 1 ~ 50
+	nail_trap_damage = 1
+	#Defines how long the duration of the Poison Mine effect cloud is
+	# Default: 50
+	# Range: 0 ~ 10000
+	poison_mine_cloud_duration = 50
+	#Defines how long the duration of the poison effect from the mine is
+	# Default: 280
+	# Range: 0 ~ 10000
+	poison_mine_effect_duration = 280
+	#Defines how long the amplifier of the poison effect from the mine is
+	# Default: 1
+	# Range: 0 ~ 10
+	poison_mine_effect_amplifier = 1
+	#Defines how long the duration of the poison effect from the Toxic Nail Trap is
+	# Default: 150
+	# Range: 0 ~ 10000
+	toxic_nail_trap_effect_duration = 150
+	#Defines how long the amplifier of the poison effect from the Toxic Nail Trap is
+	# Default: 0
+	# Range: 0 ~ 10
+	toxic_nail_trap_effect_amplifier = 0
+	#Defines how long the duration of the poison effect from the Toxin is
+	# Default: 500
+	# Range: 0 ~ 10000
+	toxin_poison_effect_duration = 500
+	#Defines how long the amplifier of the poison effect from the Toxin is
+	# Default: 0
+	# Range: 0 ~ 10
+	toxin_poison_effect_amplifier = 0
+	#Defines how long the duration of the confusion effect from the Toxin is
+	# Default: 100
+	# Range: 0 ~ 10000
+	toxin_confusion_effect_duration = 100
+	#Defines how long the amplifier of the confusion effect from the Toxin is
+	# Default: 0
+	# Range: 0 ~ 10
+	toxin_confusion_effect_amplifier = 0
+	#Defines how much damage the Spikes do
+	# Default: 4
+	# Range: 1 ~ 100
+	spikes_damage = 4
+	#Defines how long the duration of the poison effect from the Toxic Spikes is
+	# Default: 250
+	# Range: 0 ~ 10000
+	toxic_spikes_effect_duration = 250
+	#Defines how long the amplifier of the poison effect from the Toxic Spikes is
+	# Default: 0
+	# Range: 0 ~ 10
+	toxic_spikes_effect_amplifier = 0
+	#Defines how much damage the Quicksand do
+	# Default: 0
+	# Range: 1 ~ 100
+	quicksand_damage = 1
+	#Defines how big the explosion radius from the Explosive Block is
+	# Default: 3
+	# Range: 1 ~ 100
+	explosive_block_radius = 3

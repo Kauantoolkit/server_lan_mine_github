@@ -1,0 +1,4 @@
+[
+  {"version":2},
+  {"ingredient":{"id":"minecraft:enchanted_book","components":{"minecraft:stored_enchantments":{"levels":{"minecraft:efficiency":3,"minecraft:loyalty":3}}}},"type":"item_stack","bookmarkType":"INGREDIENT"}
+]

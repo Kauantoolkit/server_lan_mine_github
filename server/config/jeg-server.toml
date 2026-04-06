@@ -1,0 +1,37 @@
+[spawns]
+	#Probability (0-1) that a naturally spawned Phantom upgrades into a Terror Phantom.
+	# Default: 0.005
+	# Range: 0.0 ~ 1.0
+	terrorPhantomChance = 0.005
+	#Probability (0-1) that a naturally spawned Phantom upgrades into a Phantom Gunner when it does not become a Terror Phantom.
+	# Default: 0.2
+	# Range: 0.0 ~ 1.0
+	phantomGunnerChance = 0.2
+	#Probability (0-1) that a naturally spawned Pillager immediately converts into a Pillager Gunner variant.
+	# Default: 0.2
+	# Range: 0.0 ~ 1.0
+	pillagerGunnerChance = 0.2
+	#Probability (0-1) that a naturally spawned Skeleton is flagged to receive a gun on spawn completion.
+	# Default: 0.14285714285714285
+	# Range: 0.0 ~ 1.0
+	skeletonGunnerChance = 0.14285714285714285
+	#Probability (0-1) that a naturally spawned Zombie converts into a Zombie Gunner. Should be lower than Skeleton Gunner chance.
+	# Default: 0.08333333333333333
+	# Range: 0.0 ~ 1.0
+	zombieGunnerChance = 0.08333333333333333
+	#Probability (0-1) that a naturally spawned Husk converts into a Husk Gunner. Same as Zombie Gunner chance.
+	# Default: 0.08333333333333333
+	# Range: 0.0 ~ 1.0
+	huskGunnerChance = 0.08333333333333333
+	#Probability (0-1) that a naturally spawned Zombified Piglin converts into a Zombified Piglin Gunner. Should be lower than Skeleton Gunner chance.
+	# Default: 0.1
+	# Range: 0.0 ~ 1.0
+	zombifiedPiglinGunnerChance = 0.1
+	#Probability (0-1) that a naturally spawned Piglin converts into a Piglin Gunner. Should be higher than Pillager Gunner chance.
+	# Default: 0.3
+	# Range: 0.0 ~ 1.0
+	piglinGunnerChance = 0.3
+	#Probability (0-1) that a naturally spawned Wither Skeleton converts into a Wither Skeleton Gunner. Wither Skeletons prefer heavy weapons.
+	# Default: 0.25
+	# Range: 0.0 ~ 1.0
+	witherSkeletonGunnerChance = 0.25

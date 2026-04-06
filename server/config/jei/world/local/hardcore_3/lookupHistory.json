@@ -1,0 +1,6 @@
+[
+  {"version":1},
+  {"ingredient":{"id":"improvableskills:skills_book"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"tfmg:synthetic_leather"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"minecraft:leather"},"type":"item_stack","bookmarkType":"INGREDIENT"}
+]

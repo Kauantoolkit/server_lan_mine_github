@@ -1,0 +1,70 @@
+# ══════════════════════════════════════════════════════════════════════════════
+#  IGNORADO — não commitar
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ── Instância cliente CurseForge (não faz parte do servidor) ──────────────────
+server/minecraft server 1.21.1/
+
+# ── NeoForge runtime (regenerado pelo installer, ~500MB) ─────────────────────
+server/libraries/
+server/server.jar
+
+# ── Mods (285MB — copiados pelo server_setup.py da instância CurseForge) ──────
+server/mods/
+
+# ── Logs e crashes ────────────────────────────────────────────────────────────
+server/logs/
+server/crash-reports/
+
+# ── Session lock (mantido pelo servidor enquanto roda) ────────────────────────
+**/session.lock
+
+# ── Caches gerados em runtime ─────────────────────────────────────────────────
+server/.mixin.out/
+server/usercache.json
+server/usernamecache.json
+
+# ── TACZ: assets padrão extraídos automaticamente pelo mod (76MB, 2939 arquivos)
+server/tacz/tacz_default_gun/
+
+# ── Sync tool: config local (tem senha RCON) e log ───────────────────────────
+config.json
+sync.log
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+.venv/
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  COMMITADO — o que entra no repositório
+# ══════════════════════════════════════════════════════════════════════════════
+#
+#  server/world/             ← mundo (overworld, nether via DIM-1, end via DIM1)
+#  server/mods/              ← mods do servidor
+#  server/config/            ← configs dos mods
+#  server/defaultconfigs/    ← configs padrão dos mods
+#  server/scripts/           ← scripts KubeJS/CraftTweaker
+#  server/tacz/              ← dados do mod TACZ (armas)
+#  server/lazy_utilities/    ← dados do mod
+#  server/moonlight-global-datapacks/
+#  server/server.properties
+#  server/ops.json
+#  server/whitelist.json
+#  server/banned-players.json
+#  server/banned-ips.json
+#  server/eula.txt
+#  server/run.bat
+#  server/run.sh
+#  server/user_jvm_args.txt
+#  status.json               ← lock distribuído
+#  sync.py
+#  config.example.json
+#  server_setup.py
+#  requirements.txt
+# ══════════════════════════════════════════════════════════════════════════════

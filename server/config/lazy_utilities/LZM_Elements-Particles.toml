@@ -1,0 +1,101 @@
+["Elemental Particle Text - Parms"]
+	#Life tome value as a general parameter when generating text particles for Elements
+	# Default: 20
+	# Range: 20 ~ 80
+	lifeTimeKey = 20
+	#Scale value as a general parameter when generating text particles for Elements
+	# Default: 0.5
+	# Range: 0.1 ~ 3.0
+	scaleKey = 0.5
+	#Radius value as a general parameter when generating text particles for Elements
+	# Default: 1.0
+	# Range: 0.1 ~ 3.0
+	radiusKey = 1.0
+	#Vertical value as a general parameter when generating text particles for Elements
+	# Default: 0.8
+	# Range: 0.1 ~ 3.0
+	verticalKey = 0.8
+	#Horizontal value as a general parameter when generating text particles for Elements
+	# Default: 1.0
+	# Range: 0.1 ~ 3.0
+	horizontalKey = 1.0
+
+["Elemental Particle Text - Elements Colors"]
+	#Color parameter for Pyro
+	# Default: 16729344
+	# Range: > -2147483648
+	pyroColorKey = 16729344
+	#Color parameter for Hydro
+	# Default: 4367861
+	# Range: > -2147483648
+	hydroColorKey = 4367861
+	#Color parameter for Geo
+	# Default: 14729574
+	# Range: > -2147483648
+	geoColorKey = 14729574
+	#Color parameter for Electro
+	# Default: 11010303
+	# Range: > -2147483648
+	electroColorKey = 11010303
+	#Color parameter for Cryo
+	# Default: 10082794
+	# Range: > -2147483648
+	cryoColorKey = 10082794
+
+["Elemental Particle Text - Insta-Reactions Colors"]
+	#Color parameter for Frozen
+	# Default: 58879
+	# Range: > -2147483648
+	frozenColorKey = 58879
+	#Color parameter for Melted Inverse (Pyro → Cryo Melt)
+	# Default: 16758465
+	# Range: > -2147483648
+	meltedInverseColorKey = 16758465
+	#Color parameter for Melted Direct (Cryo → Pyro Melt)
+	# Default: 14123375
+	# Range: > -2147483648
+	meltedDirectColorKey = 14123375
+	#Color parameter for Overload Inverse (Electro → Pyro Overload)
+	# Default: 8522530
+	# Range: > -2147483648
+	overloadInverseColorKey = 8522530
+	#Color parameter for Overload Direct (Pyro → Electro Overload)
+	# Default: 16729449
+	# Range: > -2147483648
+	overloadDirectColorKey = 16729449
+	#Color parameter for Vaporized Inverse (Pyro → Hydro Overload)
+	# Default: 16246210
+	# Range: > -2147483648
+	vaporizedInverseColorKey = 16246210
+	#Color parameter for Vaporized Direct (Hydro → Pyro Vaporized)
+	# Default: 12890767
+	# Range: > -2147483648
+	vaporizedDirectColorKey = 12890767
+
+["Elemental Particle Text - OnTime-Reactions Colors"]
+	#Color parameter for Burning
+	# Default: 16747520
+	# Range: > -2147483648
+	burningColorKey = 16747520
+	#Color parameter for Cold
+	# Default: 11393254
+	# Range: > -2147483648
+	coldColorKey = 11393254
+	#Color parameter for Electrocharged
+	# Default: 6765239
+	# Range: > -2147483648
+	electrochargedColorKey = 6765239
+
+["Elemental Particle Text - State-Reactions Colors"]
+	#Color parameter for Conductor
+	# Default: 8146431
+	# Range: > -2147483648
+	conductorColorKey = 8146431
+	#Color parameter for Conductor
+	# Default: 5025616
+	# Range: > -2147483648
+	rootedColorKey = 5025616
+	#Color parameter for Conductor
+	# Default: 16747520
+	# Range: > -2147483648
+	superConductorColorKey = 16747520

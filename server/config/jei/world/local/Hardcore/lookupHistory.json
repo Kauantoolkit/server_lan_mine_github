@@ -1,0 +1,5 @@
+[
+  {"version":1},
+  {"ingredient":{"id":"pathogen:infector_antigene"},"type":"item_stack","bookmarkType":"INGREDIENT"},
+  {"ingredient":{"id":"minecraft:golden_apple"},"type":"item_stack","bookmarkType":"INGREDIENT"}
+]

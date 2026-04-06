@@ -1,0 +1,25 @@
+#Lost Cities Autoloader Configuration
+#Enable the Lost Cities autoloader functionality
+enable_autoloader = true
+#Name of the configuration file to load from config/lost_cities_autoloader/ directory (without .json extension)
+config_file_name = "survival_cities"
+#Dimension where Lost Cities should generate
+#Use 'minecraft:overworld' for overworld, 'minecraft:the_nether' for nether, 'minecraft:the_end' for end
+#Or specify a custom dimension like 'lostcities:lostcity'
+lost_city_dimension = "minecraft:overworld"
+#Enable custom player spawn dimension (separate from Lost Cities dimension)
+enable_custom_spawn = false
+#Dimension where players should spawn when joining the world
+#This can be different from the Lost Cities dimension
+#Only used if enable_custom_spawn is true
+player_spawn_dimension = "minecraft:overworld"
+#Coordinates where players should spawn in the format 'x,y,z'
+#Example: '0,64,0' spawns at world center at Y level 64
+#Leave empty or comment out to use default spawn location
+#Only used if enable_custom_spawn is true
+player_spawn_coordinates = ""
+#Direction the player should face when spawning (in degrees)
+#0=North, 90=East, 180=South, 270=West
+#Leave empty or comment out to use default spawn facing
+#Only used if enable_custom_spawn is true
+player_spawn_facing = ""
