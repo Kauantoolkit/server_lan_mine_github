@@ -1,6 +1,0 @@
-[
-  {"version":1},
-  {"ingredient":{"id":"minecraft:armor_stand"},"type":"item_stack","bookmarkType":"INGREDIENT"},
-  {"ingredient":{"id":"improvableskills:skills_book"},"type":"item_stack","bookmarkType":"INGREDIENT"},
-  {"ingredient":{"id":"minecraft:paper"},"type":"item_stack","bookmarkType":"INGREDIENT"}
-]

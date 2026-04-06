@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guia — Minecraft Server Sync</title>
+  <style>
+    :root {
+      --bg:      #1a1a2e;
+      --surface: #16213e;
+      --card:    #0f3460;
+      --accent:  #e94560;
+      --green:   #4ecca3;
+      --yellow:  #f5a623;
+      --blue:    #6495ed;
+      --text:    #e0e0e0;
+      --muted:   #8892a4;
+      --code-bg: #0d1b2a;
+      --border:  #2a3a5c;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f3460 0%, #16213e 60%, #1a1a2e 100%);
+      border-bottom: 2px solid var(--accent);
+      padding: 40px 24px 32px;
+      text-align: center;
+    }
+    header h1 { font-size: 2rem; color: #fff; letter-spacing: 1px; }
+    header p  { color: var(--muted); margin-top: 6px; font-size: 0.95rem; }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    /* ── Seletor de perfil ── */
+    .who {
+      display: flex; gap: 12px; margin-bottom: 36px; flex-wrap: wrap;
+    }
+    .who-btn {
+      flex: 1; min-width: 200px;
+      background: var(--surface); border: 2px solid var(--border);
+      border-radius: 12px; padding: 20px;
+      cursor: pointer; text-align: center;
+      transition: border-color 0.2s, background 0.2s;
+      text-decoration: none; color: var(--text);
+      display: block;
+    }
+    .who-btn:hover  { border-color: var(--green); background: var(--card); }
+    .who-btn.active { border-color: var(--green); background: var(--card); }
+    .who-btn .icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+    .who-btn strong { display: block; font-size: 1rem; color: var(--green); margin-bottom: 4px; }
+    .who-btn span { font-size: 0.83rem; color: var(--muted); }
+
+    /* ── Partes ── */
+    .part-header {
+      border-radius: 10px; padding: 16px 20px;
+      margin-bottom: 28px; margin-top: 8px;
+    }
+    .part-header.client { background: rgba(100,149,237,.12); border-left: 4px solid var(--blue); }
+    .part-header.server { background: rgba(78,204,163,.10);  border-left: 4px solid var(--green); }
+    .part-header h2 { border: none; padding: 0; margin: 0 0 4px; font-size: 1.3rem; }
+    .part-header.client h2 { color: #aac4f0; }
+    .part-header.server h2 { color: var(--green); }
+    .part-header p { color: var(--muted); font-size: 0.9rem; margin: 0; }
+
+    section { margin-bottom: 44px; }
+
+    h2 {
+      font-size: 1.15rem; color: var(--green);
+      border-left: 3px solid var(--accent);
+      padding-left: 12px; margin-bottom: 16px; margin-top: 8px;
+    }
+    h3 { font-size: 1rem; color: var(--yellow); margin: 20px 0 10px; }
+    p  { margin-bottom: 10px; }
+    ul, ol { margin-left: 22px; margin-bottom: 10px; }
+    li { margin-bottom: 4px; }
+
+    .step {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 18px 20px; margin-bottom: 14px;
+    }
+    .step-num {
+      display: inline-block;
+      background: var(--accent); color: #fff;
+      font-weight: 700; font-size: 0.75rem;
+      padding: 2px 8px; border-radius: 4px;
+      margin-bottom: 8px; letter-spacing: 0.5px;
+    }
+    .step p:last-child, .step ul:last-child, .step ol:last-child { margin-bottom: 0; }
+
+    pre, code { font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; }
+    code {
+      background: var(--code-bg); color: #a8d8ea;
+      padding: 1px 6px; border-radius: 4px; font-size: 0.88em;
+    }
+    pre {
+      background: var(--code-bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 16px;
+      overflow-x: auto; margin: 10px 0 14px;
+      font-size: 0.88rem; color: #c9d1d9; line-height: 1.6;
+    }
+    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+    .callout {
+      border-radius: 8px; padding: 12px 16px; margin: 14px 0; font-size: 0.92rem;
+    }
+    .callout.warn   { background: rgba(229,115,0,.12); border-left: 3px solid var(--yellow); color: #f0c27f; }
+    .callout.tip    { background: rgba(78,204,163,.10); border-left: 3px solid var(--green);  color: #a8e6cf; }
+    .callout.danger { background: rgba(233,69,96,.10);  border-left: 3px solid var(--accent); color: #f4a0b0; }
+    .callout.info   { background: rgba(100,149,237,.10);border-left: 3px solid var(--blue);   color: #aac4f0; }
+
+    table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 8px; overflow: hidden; margin: 14px 0; }
+    th { background: var(--card); color: var(--green); font-size: 0.85rem; text-align: left; padding: 10px 14px; }
+    td { padding: 9px 14px; border-top: 1px solid var(--border); font-size: 0.9rem; vertical-align: top; }
+    tr:hover td { background: rgba(255,255,255,.02); }
+
+    .tree {
+      background: var(--code-bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 16px;
+      font-family: monospace; font-size: 0.88rem;
+      line-height: 1.8; color: #c9d1d9; overflow-x: auto;
+    }
+    .tree .dir  { color: #79c0ff; }
+    .tree .note { color: var(--muted); }
+    .tree .git  { color: var(--green); }
+    .tree .no   { color: var(--accent); }
+
+    img.screenshot {
+      max-width: 100%; border-radius: 8px;
+      border: 1px solid var(--border); margin: 10px 0;
+    }
+
+    .download-btn {
+      display: inline-block;
+      background: var(--card); border: 1px solid var(--green);
+      color: var(--green); text-decoration: none;
+      padding: 6px 14px; border-radius: 6px;
+      font-size: 0.85rem; margin: 4px 4px 4px 0;
+      transition: background 0.15s;
+    }
+    .download-btn:hover { background: #1a3a60; }
+
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    footer {
+      text-align: center; color: var(--muted);
+      font-size: 0.8rem; padding: 24px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>⛏ Minecraft Server Sync</h1>
+  <p>Guia completo de instalação e uso — NeoForge 1.21.1 + GitHub</p>
+</header>
+
+<div class="container">
+
+  <!-- ── Quem é você ── -->
+  <p style="text-align:center; color:var(--muted); margin-bottom:16px;">O que você quer fazer?</p>
+  <div class="who">
+    <button class="who-btn" onclick="mostrar('jogar')">
+      <span class="icon">🎮</span>
+      <strong>Quero jogar</strong>
+      <span>Configurar o Minecraft para entrar no servidor</span>
+    </button>
+    <button class="who-btn" onclick="mostrar('hospedar')">
+      <span class="icon">🖥️</span>
+      <strong>Quero hospedar</strong>
+      <span>Subir o servidor e sincronizar o mundo</span>
+    </button>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       PARTE 1 — CLIENTE
+       ════════════════════════════════════════════ -->
+  <div id="parte-cliente" style="display:none">
+    <div class="part-header client">
+      <h2>🎮 Parte 1 — Configurar o cliente</h2>
+      <p>Faça isso para conseguir entrar no servidor e jogar.</p>
+    </div>
+
+    <!-- Java -->
+    <section id="java">
+      <h2>Passo 1 — Instalar o Java 21</h2>
+      <p>O Java é necessário para rodar o NeoForge.</p>
+      <div class="callout warn">Precisa ser o Java <strong>21</strong>. Versões mais antigas não funcionam.</div>
+
+      <div class="step">
+        <span class="step-num">BAIXAR</span>
+        <p>Acesse <strong>adoptium.net</strong> e baixe o <strong>Temurin 21 (LTS)</strong> para Windows.</p>
+        <a class="download-btn" href="https://adoptium.net/temurin/releases/?version=21" target="_blank">adoptium.net — Temurin 21</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">INSTALAR</span>
+        <p>Execute o instalador. Se aparecer a opção <strong>"Add to PATH"</strong>, marque ela — é importante.</p>
+      </div>
+
+      <div class="step">
+        <span class="step-num">VERIFICAR</span>
+        <p>Abra o Prompt de Comando (tecla Windows → digite <code>cmd</code> → Enter) e rode:</p>
+        <pre><code>java -version</code></pre>
+        <p>Deve aparecer <code>openjdk version "21.x.x"</code>.</p>
+      </div>
+    </section>
+
+    <!-- NeoForge cliente -->
+    <section id="neoforge-cliente">
+      <h2>Passo 2 — Instalar o NeoForge no Minecraft</h2>
+      <p>O NeoForge é o mod loader — sem ele o Minecraft não consegue carregar os mods. Você vai receber um arquivo chamado <code>neoforge-21.1.x-installer.jar</code>.</p>
+
+      <div class="step">
+        <span class="step-num">EXECUTAR O INSTALLER</span>
+        <p>Dê <strong>duplo clique</strong> no arquivo <code>neoforge-...-installer.jar</code>. Uma janela vai abrir:</p>
+        <ul>
+          <li>Selecione <strong>"Install client"</strong></li>
+          <li>O caminho do Minecraft já vem preenchido automaticamente — não precisa mudar</li>
+          <li>Clique em <strong>OK</strong> e aguarde terminar</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <span class="step-num">VERIFICAR NO LAUNCHER</span>
+        <p>Abra o launcher do Minecraft. No seletor de versões (canto esquerdo inferior), deve aparecer um perfil chamado <strong>NeoForge 1.21.1-xx.x.x</strong>. Selecione ele.</p>
+      </div>
+
+      <div class="callout tip">
+        Se o launcher não abrir ao dar duplo clique no <code>.jar</code>, clique com botão direito → <strong>Abrir com</strong> → <strong>Java(TM) Platform SE Binary</strong>.
+      </div>
+    </section>
+
+    <!-- Mods e configs cliente -->
+    <section id="mods-cliente">
+      <h2>Passo 3 — Instalar os mods e configs</h2>
+      <p>Você vai receber um arquivo <code>.zip</code> com duas pastas dentro: <code>mods</code> e <code>config</code>. Extraia o zip e siga os passos abaixo.</p>
+
+      <div class="step">
+        <span class="step-num">INSTALAR OS MODS</span>
+        <p>Pressione <strong>Windows + R</strong>, cole o caminho abaixo e pressione Enter:</p>
+        <pre><code>%appdata%\.minecraft\mods</code></pre>
+        <p>Copie todos os arquivos <code>.jar</code> da pasta <code>mods</code> do zip para dentro dessa pasta.</p>
+        <div class="callout warn">
+          Se já tiver mods de outro modpack, remova tudo antes de colocar os novos para evitar conflitos.
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">INSTALAR AS CONFIGS</span>
+        <p>Pressione <strong>Windows + R</strong>, cole o caminho abaixo e pressione Enter:</p>
+        <pre><code>%appdata%\.minecraft\config</code></pre>
+        <p>Copie o conteúdo da pasta <code>config</code> do zip para dentro dessa pasta.</p>
+        <div class="callout tip">
+          Se perguntar se quer substituir arquivos, clique em <strong>Sim para todos</strong>.
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">TESTAR</span>
+        <p>Abra o Minecraft, selecione o perfil <strong>NeoForge 1.21.1</strong> e clique em Jogar. Se carregar sem erros, está tudo certo.</p>
+        <p>Para entrar no servidor, use o IP que o dono te passar.</p>
+      </div>
+    </section>
+  </div>
+
+  <hr class="divider" id="divisor" style="display:none">
+
+  <!-- ════════════════════════════════════════════
+       PARTE 2 — SERVIDOR
+       ════════════════════════════════════════════ -->
+  <div id="parte-servidor" style="display:none">
+    <div class="part-header server">
+      <h2>🖥️ Parte 2 — Configurar o servidor</h2>
+      <p>Configure o servidor local e a sincronização do mundo com o GitHub.</p>
+    </div>
+
+    <!-- Git -->
+    <section id="git">
+      <h2>Passo 1 — Instalar o Git</h2>
+      <p>O Git mantém o mundo sincronizado entre os jogadores via GitHub.</p>
+
+      <div class="step">
+        <span class="step-num">BAIXAR</span>
+        <p>Acesse <strong>git-scm.com</strong> e baixe o instalador para Windows.</p>
+        <a class="download-btn" href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">INSTALAR</span>
+        <p>Execute o instalador. Pode clicar em <strong>Next</strong> em todas as telas — as opções padrão funcionam.</p>
+      </div>
+
+      <div class="step">
+        <span class="step-num">VERIFICAR</span>
+        <p>Abra o Prompt de Comando e rode:</p>
+        <pre><code>git --version</code></pre>
+        <p>Deve aparecer <code>git version 2.x.x</code>.</p>
+      </div>
+    </section>
+
+    <!-- Baixar repo -->
+    <section id="repo">
+      <h2>Passo 2 — Baixar os arquivos do servidor</h2>
+
+      <div class="step">
+        <span class="step-num">CRIAR A PASTA</span>
+        <p>Crie uma pasta para o servidor, por exemplo <code>C:\minecraft-server\</code>. Abra essa pasta no Explorer, clique com botão direito no espaço vazio e selecione <strong>"Abrir no Terminal"</strong> ou <strong>"Git Bash Here"</strong>.</p>
+      </div>
+
+      <div class="step">
+        <span class="step-num">CLONAR</span>
+        <p>Cole o comando abaixo no terminal (use a URL do repositório):</p>
+        <pre><code>git clone https://github.com/USUARIO/REPOSITORIO.git .</code></pre>
+        <div class="callout tip">O ponto no final é importante — faz os arquivos aparecerem direto na pasta atual.</div>
+      </div>
+
+      <p>Depois disso a pasta vai ter estes arquivos:</p>
+      <div class="tree">
+<span class="dir">minecraft-server/</span>
+├── <span class="git">sync.exe</span>             <span class="note">← programa principal</span>
+├── <span class="git">server_setup.exe</span>     <span class="note">← setup inicial</span>
+├── <span class="git">config.example.json</span>  <span class="note">← modelo de configuração</span>
+├── <span class="git">status.json</span>          <span class="note">← mostra quem está jogando</span>
+└── <span class="dir">server/</span>              <span class="note">← pasta do servidor (ainda vazia)</span>
+      </div>
+    </section>
+
+    <!-- Mods servidor -->
+    <section id="mods-servidor">
+      <h2>Passo 3 — Colocar os mods no servidor</h2>
+
+      <div class="step">
+        <span class="step-num">COPIAR OS MODS</span>
+        <p>Copie os arquivos <code>.jar</code> do modpack para a pasta <code>server\mods\</code> (crie a pasta se não existir):</p>
+        <div class="tree">
+<span class="dir">minecraft-server/</span>
+└── <span class="dir">server/</span>
+    └── <span class="dir">mods/</span>    <span class="note">← cole aqui os .jar dos mods</span>
+        </div>
+      </div>
+
+      <div class="callout info">
+        Pode colocar todos os mods incluindo os client-only — o <code>server_setup.exe</code> vai remover automaticamente os que não funcionam no servidor.
+      </div>
+    </section>
+
+    <!-- NeoForge servidor -->
+    <section id="neoforge-servidor">
+      <h2>Passo 4 — Instalar o NeoForge no servidor</h2>
+      <p>Use o mesmo arquivo <code>neoforge-...-installer.jar</code> — desta vez ele vai instalar no servidor.</p>
+
+      <div class="step">
+        <span class="step-num">COLOCAR O INSTALLER</span>
+        <p>Coloque o arquivo <code>neoforge-...-installer.jar</code> dentro da pasta <code>server\</code>.</p>
+        <div class="tree">
+<span class="dir">server/</span>
+├── <span class="dir">mods/</span>
+└── neoforge-21.1.x-installer.jar    <span class="note">← aqui</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">RODAR O SETUP</span>
+        <p>Abra o terminal na pasta do servidor e rode:</p>
+        <pre><code>server_setup.exe</code></pre>
+        <p>Isso vai:</p>
+        <ol style="margin-top:8px">
+          <li>Instalar o NeoForge no servidor (~500 MB, pode demorar)</li>
+          <li>Remover os mods client-only de <code>server\mods\</code></li>
+          <li>Criar o <code>eula.txt</code> e o <code>server.properties</code></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Config -->
+    <section id="config">
+      <h2>Passo 5 — Configurar</h2>
+
+      <div class="step">
+        <span class="step-num">CRIAR config.json</span>
+        <p>Na pasta do servidor, copie o arquivo <code>config.example.json</code> e renomeie a cópia para <code>config.json</code>.</p>
+      </div>
+
+      <div class="step">
+        <span class="step-num">EDITAR</span>
+        <p>Abra o <code>config.json</code> com o Bloco de Notas e preencha os campos marcados:</p>
+        <pre><code>{
+  "player_name": "<strong>SeuNomeAqui</strong>",
+  "server_path": "./server",
+  "start_command": [
+    "java",
+    "@user_jvm_args.txt",
+    "@libraries/net/neoforged/neoforge/21.1.218/win_args.txt",
+    "nogui"
+  ],
+  "backup_interval_minutes": 15,
+  "rcon": {
+    "host": "127.0.0.1",
+    "port": 25575,
+    "password": "<strong>SENHA_AQUI</strong>"
+  },
+  "git": {
+    "remote_url": "<strong>https://github.com/USUARIO/REPOSITORIO.git</strong>",
+    "branch": "main"
+  }
+}</code></pre>
+        <ul>
+          <li>Troque <code>SeuNomeAqui</code> pelo seu nome ou apelido</li>
+          <li>Troque <code>SENHA_AQUI</code> pela senha do RCON (a mesma que está em <code>server\server.properties</code>)</li>
+          <li>Troque a URL do GitHub pela URL correta do repositório</li>
+        </ul>
+      </div>
+
+      <div class="callout warn">Não mexa nos outros campos. Salve o arquivo depois de editar.</div>
+    </section>
+
+    <!-- Primeira vez -->
+    <section id="primeira-vez">
+      <h2>Passo 6 — Inicializar o repositório (só na primeira vez)</h2>
+
+      <div class="step">
+        <span class="step-num">SETUP</span>
+        <p>Abra o terminal na pasta do servidor e rode:</p>
+        <pre><code>sync.exe setup</code></pre>
+        <p>Isso conecta a pasta ao GitHub e faz o primeiro upload.</p>
+      </div>
+
+      <div class="callout tip">Se aparecer uma janela pedindo login no GitHub, entre com sua conta normalmente.</div>
+    </section>
+
+    <!-- Uso diário -->
+    <section id="uso">
+      <h2>Uso do dia a dia</h2>
+
+      <h3>Para subir o servidor</h3>
+      <pre><code>sync.exe start</code></pre>
+      <p>Verifica se alguém está jogando, baixa o mundo mais recente do GitHub e sobe o servidor. Seus amigos conectam pelo seu IP local.</p>
+
+      <h3>Ver quem está jogando</h3>
+      <pre><code>sync.exe status</code></pre>
+
+      <h3>Parar o servidor</h3>
+      <p>Digite <code>/stop</code> no console do servidor ou pressione <code>Ctrl+C</code> no terminal. O mundo é salvo e enviado pro GitHub automaticamente.</p>
+
+      <h3>Se o servidor travou e o lock ficou preso</h3>
+      <pre><code>sync.exe force-release</code></pre>
+      <div class="callout warn">Use só se o servidor não está mais rodando. Nunca use enquanto alguém estiver jogando.</div>
+    </section>
+
+    <!-- Comandos -->
+    <section id="comandos">
+      <h2>Referência de comandos</h2>
+      <table>
+        <tr><th>Comando</th><th>O que faz</th></tr>
+        <tr><td><code>sync.exe start</code></td><td>Verifica lock, faz pull, sobe o servidor, backups automáticos, push ao fechar</td></tr>
+        <tr><td><code>sync.exe status</code></td><td>Mostra quem está jogando ou se está livre</td></tr>
+        <tr><td><code>sync.exe force-release</code></td><td>Força liberação do lock (usar só se travou)</td></tr>
+        <tr><td><code>sync.exe setup</code></td><td>Inicializa git e faz o primeiro push (só na primeira vez)</td></tr>
+        <tr><td><code>server_setup.exe</code></td><td>Instala NeoForge, limpa mods client-only, cria eula e server.properties</td></tr>
+      </table>
+    </section>
+
+    <!-- Regra de ouro -->
+    <section id="regra">
+      <h2>Regra de ouro</h2>
+      <div class="callout danger" style="font-size:1rem; padding:16px 20px;">
+        <strong>Sempre</strong> use <code>sync.exe start</code> para iniciar o servidor.<br><br>
+        <strong>Nunca</strong> abra pelo <code>run.bat</code> diretamente — o mundo não será salvo no GitHub e outros jogadores não vão conseguir jogar depois.
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<footer>Minecraft Server Sync — NeoForge 1.21.1</footer>
+
+<script>
+  function mostrar(perfil) {
+    const cliente  = document.getElementById('parte-cliente');
+    const servidor = document.getElementById('parte-servidor');
+    const divisor  = document.getElementById('divisor');
+    const btns     = document.querySelectorAll('.who-btn');
+
+    btns.forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+
+    if (perfil === 'jogar') {
+      cliente.style.display  = 'block';
+      servidor.style.display = 'none';
+      divisor.style.display  = 'none';
+    } else {
+      cliente.style.display  = 'block';
+      servidor.style.display = 'block';
+      divisor.style.display  = 'block';
+    }
+
+    cliente.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+
+</body>
+</html>

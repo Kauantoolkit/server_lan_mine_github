@@ -12,6 +12,11 @@ server/server.jar
 # ── Mods (285MB — copiados pelo server_setup.py da instância CurseForge) ──────
 server/mods/
 
+# ── Configs dos mods (geradas automaticamente, exceto starterkit) ─────────────
+server/config/
+!server/config/starterkit/
+!server/config/starterkit/**
+
 # ── Logs e crashes ────────────────────────────────────────────────────────────
 server/logs/
 server/crash-reports/
@@ -40,6 +45,20 @@ desktop.ini
 __pycache__/
 *.pyc
 .venv/
+venv/
+
+# ── Pasta de distribuição (arquivos pra mandar pros amigos) ───────────────────
+oqmandar/
+
+# ── Instância cliente na raiz (caso movida pra cá) ────────────────────────────
+minecraft server 1.21.1/
+
+# ── PyInstaller (build do executável) ─────────────────────────────────────────
+dist/
+build/
+*.spec
+sync.exe
+server_setup.exe
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  COMMITADO — o que entra no repositório

@@ -1,5 +1,0 @@
-["Spawn Options"]
-	#Allow mobs to spawn at night (Disabling this option means no Outbreak Mob will spawn)
-	"Spawn At Night" = true
-	#Mobs will burn During Daytime
-	"Burn During Daytime" = false

@@ -1,8 +1,0 @@
-[
-  {"version":1},
-  {"ingredient":{"id":"minecraft:charcoal"},"type":"item_stack","bookmarkType":"INGREDIENT"},
-  {"ingredient":{"id":"spore:inf_up_chest"},"type":"item_stack","bookmarkType":"INGREDIENT"},
-  {"ingredient":{"id":"spore:living_chest"},"type":"item_stack","bookmarkType":"INGREDIENT"},
-  {"ingredient":{"id":"spore:plated_chest"},"type":"item_stack","bookmarkType":"INGREDIENT"},
-  {"ingredient":{"id":"spore:inf_chest"},"type":"item_stack","bookmarkType":"INGREDIENT"}
-]

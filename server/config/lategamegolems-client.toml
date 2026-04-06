@@ -1,4 +1,0 @@
-#Settings for Late Game Golem
-[lgg_entity]
-	#Display Death Message
-	lgg_entity_death_msg = false

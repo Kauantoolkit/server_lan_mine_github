@@ -1,57 +1,126 @@
 #!/usr/bin/env python3
 """
-server_setup.py — Prepara o servidor dedicado NeoForge
-com os mods da instância CurseForge.
+server_setup.py — Prepara o servidor dedicado NeoForge.
 
-Executa uma vez antes do primeiro start.
+Executa uma vez antes do primeiro start:
+  1. Instala o NeoForge (roda o installer que estiver em server/)
+  2. Aceita a EULA
+  3. Cria server.properties
+  4. Verifica se os mods estão no lugar
 """
 
-import shutil
+import subprocess
 import sys
 from pathlib import Path
 
 # ─── Caminhos ─────────────────────────────────────────────────────────────────
 
-ROOT          = Path(__file__).parent
-CLIENT        = ROOT / "server" / "minecraft server 1.21.1"
-SERVER        = ROOT / "server"
+ROOT   = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent
+SERVER = ROOT / "server"
 
-CLIENT_MODS   = CLIENT / "mods"
-CLIENT_CONFIG = CLIENT / "config"
-SERVER_MODS   = SERVER / "mods"
-SERVER_CONFIG = SERVER / "config"
 
-# ─── Mods client-only (não funcionam / crasham servidor dedicado) ─────────────
-# Renderização, shaders, HUD, otimizações visuais — o servidor não tem GPU.
+# ─── NeoForge installer ───────────────────────────────────────────────────────
+
+def find_installer() -> Path | None:
+    """Procura pelo jar do installer NeoForge dentro de server/."""
+    jars = sorted(SERVER.glob("neoforge-*-installer.jar"))
+    return jars[0] if jars else None
+
+
+def neoforge_installed() -> bool:
+    """Retorna True se o NeoForge já foi instalado (pasta libraries existe)."""
+    return (SERVER / "libraries").exists()
+
+
+def install_neoforge():
+    if neoforge_installed():
+        print("ℹ️  NeoForge já instalado — pulando.")
+        return
+
+    installer = find_installer()
+    if not installer:
+        print("❌ Installer do NeoForge não encontrado em server/")
+        print("   Coloque o arquivo neoforge-*-installer.jar dentro da pasta server/")
+        print("   e rode este programa novamente.")
+        sys.exit(1)
+
+    print(f"   Installer encontrado: {installer.name}")
+    print("   Instalando NeoForge... (pode demorar alguns minutos)")
+    print()
+
+    result = subprocess.run(
+        ["java", "-jar", str(installer), "--installServer"],
+        cwd=SERVER,
+    )
+
+    if result.returncode != 0:
+        print()
+        print("❌ Falha na instalação do NeoForge.")
+        print("   Verifique se o Java 21 está instalado corretamente.")
+        sys.exit(1)
+
+    print()
+    print("✅ NeoForge instalado.")
+
+
+# ─── eula.txt ─────────────────────────────────────────────────────────────────
+
+def accept_eula():
+    eula = SERVER / "eula.txt"
+    if eula.exists() and "eula=true" in eula.read_text(encoding="utf-8"):
+        print("ℹ️  eula.txt já aceito.")
+        return
+    eula.write_text("eula=true\n", encoding="utf-8")
+    print("✅ eula.txt criado.")
+
+
+# ─── server.properties ────────────────────────────────────────────────────────
+
+def create_server_properties():
+    props = SERVER / "server.properties"
+    if props.exists():
+        print("ℹ️  server.properties já existe — não sobrescrevendo.")
+        return
+
+    props.write_text(
+        "# Gerado pelo server_setup\n"
+        "server-port=25565\n"
+        "online-mode=false\n"
+        "max-players=10\n"
+        "view-distance=10\n"
+        "simulation-distance=8\n"
+        "enable-rcon=true\n"
+        "rcon.port=25575\n"
+        "rcon.password=troqueisso\n"
+        "broadcast-rcon-to-ops=false\n"
+        "difficulty=normal\n"
+        "spawn-protection=0\n"
+        "level-name=world\n",
+        encoding="utf-8",
+    )
+    print("✅ server.properties criado.")
+    print("   ⚠️  Troque rcon.password em server/server.properties antes de iniciar!")
+
+
+# ─── Filtro de mods client-only ───────────────────────────────────────────────
+# Esses mods crasham o servidor dedicado (renderização, shaders, HUD, etc.)
 
 CLIENT_ONLY = {
     # Sodium / renderização OpenGL
-    "sodium-neoforge",
-    "sodiumdynamiclights",
-    "sodiumextras",
-    "sodiumoptionsapi",
-    "sodiumoptionsmodcompat",
-    "reeses-sodium-options",
+    "sodium-neoforge", "sodiumdynamiclights", "sodiumextras",
+    "sodiumoptionsapi", "sodiumoptionsmodcompat", "reeses-sodium-options",
     # Iris / shaders
-    "iris-neoforge",
-    "oculus_for_simpleclouds",
-    # Texturas / modelos de entidades (visuais)
-    "entity_model_features",
-    "entity_texture_features",
+    "iris-neoforge", "oculus_for_simpleclouds",
+    # Texturas / modelos de entidades
+    "entity_model_features", "entity_texture_features",
     # Otimizações de renderização
-    "entityculling",
-    "ImmediatelyFast",
-    "dynamic-fps",
+    "entityculling", "ImmediatelyFast", "dynamic-fps",
     # HUD / câmera / UI
-    "BetterThirdPerson",
-    "MouseTweaks",
-    "Controlling",
-    "Searchables",
-    "abridged",
-    "Loot Beams Refork",
-    # Minimap (client-side rendering)
+    "BetterThirdPerson", "MouseTweaks", "Controlling", "Searchables",
+    "abridged", "Loot Beams Refork",
+    # Minimap
     "xaerominimap",
-    # HUD de vida acima dos mobs
+    # HUD de vida
     "torohealth",
     # Nuvens visuais
     "simpleclouds",
@@ -63,140 +132,57 @@ CLIENT_ONLY = {
 
 
 def is_client_only(jar_name: str) -> bool:
-    """Retorna True se o mod é client-only pelo nome do arquivo."""
     lower = jar_name.lower()
-    for pattern in CLIENT_ONLY:
-        if pattern.lower() in lower:
-            return True
-    return False
+    return any(pattern.lower() in lower for pattern in CLIENT_ONLY)
 
 
-# ─── Copia mods ───────────────────────────────────────────────────────────────
+# ─── Verifica e limpa mods ────────────────────────────────────────────────────
 
-def copy_mods():
-    if not CLIENT_MODS.exists():
-        print(f"❌ Pasta de mods não encontrada: {CLIENT_MODS}")
-        sys.exit(1)
-
-    SERVER_MODS.mkdir(exist_ok=True)
-
-    jars = sorted(CLIENT_MODS.glob("*.jar"))
-    copied  = []
-    skipped = []
-
-    for jar in jars:
-        # Ignora mods desativados (.disabled)
-        if jar.suffix == ".disabled":
-            skipped.append((jar.name, "desativado"))
-            continue
-
-        if is_client_only(jar.name):
-            skipped.append((jar.name, "client-only"))
-            continue
-
-        dest = SERVER_MODS / jar.name
-        shutil.copy2(jar, dest)
-        copied.append(jar.name)
-
-    print(f"\n✅ {len(copied)} mods copiados para server/mods/")
-    print(f"⏭️  {len(skipped)} ignorados\n")
-
-    if skipped:
-        print("─── Ignorados ───────────────────────────────────────")
-        for name, reason in skipped:
-            print(f"  [{reason}] {name}")
+def check_mods():
+    mods_dir = SERVER / "mods"
+    if not mods_dir.exists() or not any(mods_dir.glob("*.jar")):
         print()
-
-    return len(copied)
-
-
-# ─── Copia config ─────────────────────────────────────────────────────────────
-
-def copy_config():
-    if not CLIENT_CONFIG.exists():
-        print("⚠️  Pasta config/ não encontrada na instância cliente — pulando.")
+        print("⚠️  Nenhum mod encontrado em server/mods/")
+        print("   Coloque os arquivos .jar dos mods lá antes de iniciar o servidor.")
         return
 
-    if SERVER_CONFIG.exists():
-        print("ℹ️  server/config/ já existe — mesclando (arquivos existentes não são sobrescritos).")
-        for src in CLIENT_CONFIG.rglob("*"):
-            if src.is_file():
-                rel  = src.relative_to(CLIENT_CONFIG)
-                dest = SERVER_CONFIG / rel
-                dest.parent.mkdir(parents=True, exist_ok=True)
-                if not dest.exists():
-                    shutil.copy2(src, dest)
-    else:
-        shutil.copytree(CLIENT_CONFIG, SERVER_CONFIG)
-        print("✅ config/ copiado para server/config/")
+    removed = []
+    kept    = []
 
-
-# ─── eula.txt ─────────────────────────────────────────────────────────────────
-
-def accept_eula():
-    eula = SERVER / "eula.txt"
-    if not eula.exists():
-        eula.write_text("eula=true\n", encoding="utf-8")
-        print("✅ eula.txt criado (eula=true)")
-    else:
-        content = eula.read_text(encoding="utf-8")
-        if "eula=true" not in content:
-            eula.write_text("eula=true\n", encoding="utf-8")
-            print("✅ eula.txt atualizado (eula=true)")
+    for jar in sorted(mods_dir.glob("*.jar")):
+        if is_client_only(jar.name):
+            jar.unlink()
+            removed.append(jar.name)
         else:
-            print("ℹ️  eula.txt já aceito.")
+            kept.append(jar.name)
 
-
-# ─── server.properties ────────────────────────────────────────────────────────
-
-def create_server_properties():
-    props = SERVER / "server.properties"
-    if props.exists():
-        print("ℹ️  server.properties já existe — não sobrescrevendo.")
-        print("   Certifique-se de ter estas linhas para o sync funcionar:")
-        print("     enable-rcon=true")
-        print("     rcon.port=25575")
-        print("     rcon.password=suasenha")
-        return
-
-    props.write_text(
-        "# Gerado pelo server_setup.py\n"
-        "server-port=25565\n"
-        "online-mode=false\n"          # false para LAN sem autenticação Mojang
-        "max-players=10\n"
-        "view-distance=10\n"
-        "simulation-distance=8\n"
-        "enable-rcon=true\n"
-        "rcon.port=25575\n"
-        "rcon.password=eosguri\n" # ← troque antes de usar
-        "broadcast-rcon-to-ops=false\n"
-        "difficulty=normal\n"
-        "spawn-protection=0\n"
-        "level-name=world\n",
-        encoding="utf-8",
-    )
-    print("✅ server.properties criado.")
-    print("   ⚠️  Troque rcon.password em server/server.properties antes de iniciar!")
+    print(f"✅ {len(kept)} mod(s) mantido(s) em server/mods/")
+    if removed:
+        print(f"🗑️  {len(removed)} mod(s) client-only removido(s):")
+        for name in removed:
+            print(f"   - {name}")
 
 
 # ─── Entry point ──────────────────────────────────────────────────────────────
 
 def main():
     print("=" * 55)
-    print("  Setup do servidor dedicado NeoForge 1.21.1")
+    print("  Setup do servidor NeoForge 1.21.1")
     print("=" * 55)
 
-    print("\n[1/4] Copiando mods...")
-    copy_mods()
+    SERVER.mkdir(exist_ok=True)
 
-    print("[2/4] Copiando configs dos mods...")
-    copy_config()
+    print("\n[1/4] Instalando NeoForge...")
+    install_neoforge()
 
-    print("[3/4] Aceitando EULA...")
+    print("\n[2/4] Aceitando EULA...")
     accept_eula()
 
-    print("[4/4] Criando server.properties...")
+    print("\n[3/4] Criando server.properties...")
     create_server_properties()
+
+    print("\n[4/4] Verificando mods...")
+    check_mods()
 
     print()
     print("=" * 55)
@@ -206,11 +192,11 @@ def main():
     print("     → troque rcon.password por uma senha real")
     print()
     print("  2. Edite config.json (copie config.example.json)")
-    print("     → coloque a mesma senha em rcon.password")
+    print("     → coloque player_name, a mesma senha e a URL do repo")
     print()
     print("  3. Inicie o servidor:")
-    print("     python sync.py setup   (primeira vez)")
-    print("     python sync.py start   (uso normal)")
+    print("     sync.exe setup   (primeira vez)")
+    print("     sync.exe start   (uso normal)")
     print("=" * 55)
 
 

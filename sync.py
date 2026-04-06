@@ -23,6 +23,14 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+
+def _repo_root() -> Path:
+    """Raiz do repositório — compatível com PyInstaller (frozen) e execução normal."""
+    if getattr(sys, 'frozen', False):
+        return Path(sys.executable).parent.resolve()
+    return Path(__file__).parent.resolve()
+
+
 # ─── Git ──────────────────────────────────────────────────────────────────────
 
 def git(args: list, cwd: Path, check: bool = True) -> subprocess.CompletedProcess:
@@ -290,7 +298,7 @@ def build_start_command(config: dict) -> list[str]:
 
 def cmd_start(config: dict):
     # repo = raiz do projeto (onde está o .git e o status.json)
-    repo        = Path(__file__).parent.resolve()
+    repo        = _repo_root()
     server_path = Path(config["server_path"]).expanduser().resolve()
     player      = config["player_name"]
     branch      = config["git"].get("branch", "main")
@@ -371,7 +379,7 @@ def cmd_start(config: dict):
 
 
 def cmd_status(config: dict):
-    repo   = Path(__file__).parent.resolve()
+    repo   = _repo_root()
     branch = config["git"].get("branch", "main")
 
     print("🔄 Verificando status...")
@@ -386,7 +394,7 @@ def cmd_status(config: dict):
 
 
 def cmd_force_release(config: dict):
-    repo   = Path(__file__).parent.resolve()
+    repo   = _repo_root()
     branch = config["git"].get("branch", "main")
 
     print("⚠️  Forçando liberação...")
