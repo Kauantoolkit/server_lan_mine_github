@@ -1,60 +1,89 @@
-# Guia — Minecraft LAN Sync
-
-Sincroniza um mundo singleplayer (aberto para LAN) com o GitHub.  
-Usa um arquivo `status.json` no próprio repositório como lock — impede que dois jogadores tentem instanciar o mundo ao mesmo tempo.
+# Guia de uso — Minecraft Server Sync
 
 ---
 
-## Fluxo completo
+## Estrutura de pastas
 
 ```
-Jogador A roda: python sync.py start
-  └── pull do GitHub
-  └── lê status.json → "free"
-  └── escreve "playing: Kauan" → push
-  └── "Abra o mundo no Minecraft agora"
-  └── [monitora session.lock]
-  └── Minecraft fechado →
-        commita o mundo + escreve "free" → push
-
-Jogador B roda: python sync.py start (enquanto A joga)
-  └── pull do GitHub
-  └── lê status.json → "playing: Kauan"
-  └── ❌ "Mundo ocupado por Kauan desde 21:30"
-  └── sai sem fazer nada
-
-Jogador B roda: python sync.py start (depois que A terminou)
-  └── pull do GitHub
-  └── lê status.json → "free"
-  └── escreve "playing: Pedro" → push
-  └── [joga normalmente]
-  └── Minecraft fechado → commita + libera
+server_lan_mine_github/               ← repositório git (esta pasta)
+│
+├── sync.py                           ← script que gerencia o servidor
+├── server_setup.py                   ← script de setup inicial (roda uma vez)
+├── config.json                       ← sua config local (você cria, não vai pro git)
+├── status.json                       ← lock de sessão (vai pro git)
+│
+└── server/                           ← tudo relacionado ao servidor
+    │
+    ├── minecraft server 1.21.1/      ← instância CurseForge (você coloca aqui)
+    │   ├── mods/                     ← mods do cliente
+    │   └── config/                   ← configs dos mods
+    │
+    ├── mods/                         ← criado pelo server_setup.py (não vai pro git)
+    ├── config/                       ← criado pelo server_setup.py (vai pro git)
+    ├── world/                        ← mundo gerado pelo servidor (vai pro git)
+    ├── libraries/                    ← NeoForge runtime (não vai pro git)
+    ├── server.jar                    ← NeoForge jar (não vai pro git)
+    ├── run.bat / run.sh
+    ├── server.properties
+    └── user_jvm_args.txt
 ```
 
 ---
 
-## Instalação (uma vez)
+## Setup inicial (primeira vez)
 
-### 1. Pré-requisitos
-- Python 3.8+ → `python --version`
-- Git → `git --version`
-- Repositório vazio criado no GitHub
+### Pré-requisitos
+- Python 3.8+
+- Git
+- Java 21
+- NeoForge server instalado em `server/`
+- Instância CurseForge do modpack colocada em `server/minecraft server 1.21.1/`
 
-### 2. Dependências
+---
+
+### Passo 1 — Colocar o modpack no lugar certo
+
+Copie (ou mova) a pasta da sua instância CurseForge para dentro de `server/`:
+
+```
+server/
+└── minecraft server 1.21.1/    ← nome exato da pasta
+    ├── mods/
+    ├── config/
+    └── ...
+```
+
+> No CurseForge, clique com botão direito na instância → **Abrir Pasta** para achar o caminho.
+
+---
+
+### Passo 2 — Instalar dependências Python
+
 ```bat
 pip install -r requirements.txt
 ```
 
-### 3. Config
+---
+
+### Passo 3 — Criar o config.json
+
 ```bat
 copy config.example.json config.json
 ```
 
-Edite o `config.json`:
+Abra o `config.json` e preencha:
+
 ```json
 {
-  "player_name": "Kauan",
-  "world_path": "C:/Users/kauan/AppData/Roaming/.minecraft/saves/NomeDoMundo",
+  "player_name": "SeuNome",
+  "server_path": "./server",
+  "start_command": ["java", "@user_jvm_args.txt", "@libraries/net/neoforged/neoforge/21.1.218/win_args.txt", "nogui"],
+  "backup_interval_minutes": 15,
+  "rcon": {
+    "host": "127.0.0.1",
+    "port": 25575,
+    "password": "suasenha"
+  },
   "git": {
     "remote_url": "https://github.com/SEU_USUARIO/SEU_REPO.git",
     "branch": "main"
@@ -62,19 +91,38 @@ Edite o `config.json`:
 }
 ```
 
-**Onde fica o `world_path`?**  
-É a pasta do mundo dentro do `.minecraft`. No Windows:
-```
-C:\Users\SEU_USUARIO\AppData\Roaming\.minecraft\saves\NomeDoMundo
-```
-Dica rápida: no Minecraft, vá em "Editar Mundo" → "Abrir Pasta do Mundo".
+> A senha do RCON deve ser a mesma que está em `server/server.properties` no campo `rcon.password`.
 
-### 4. Primeiro push (só quem cria o repo faz isso)
+---
+
+### Passo 4 — Copiar mods para o servidor
+
+```bat
+python server_setup.py
+```
+
+Isso vai:
+- Copiar os mods da instância CurseForge para `server/mods/` (filtrando os client-only)
+- Copiar `config/` dos mods
+- Criar `eula.txt` e `server.properties`
+
+---
+
+### Passo 5 — Inicializar o repositório git
+
 ```bat
 python sync.py setup
 ```
 
-Isso inicializa o git dentro da pasta do mundo, conecta ao GitHub e faz o primeiro push.
+---
+
+### Passo 6 — Iniciar o servidor
+
+```bat
+python sync.py start
+```
+
+O script vai verificar o lock, subir o servidor, fazer backups automáticos e salvar no GitHub quando você parar.
 
 ---
 
@@ -85,73 +133,43 @@ Isso inicializa o git dentro da pasta do mundo, conecta ao GitHub e faz o primei
 python sync.py start
 ```
 
-O script vai:
-1. Puxar o estado mais recente do GitHub
-2. Verificar se o mundo está livre
-3. Registrar sua sessão
-4. Pedir pra você abrir o mundo no Minecraft
-5. Monitorar até você fechar o jogo
-6. Salvar e fazer push automaticamente
-
-### Checar quem está jogando (sem abrir)
+### Ver quem está jogando
 ```bat
 python sync.py status
 ```
 
-### Se o Minecraft travou e o lock ficou preso
+### Se o servidor travou e o lock ficou preso
 ```bat
 python sync.py force-release
 ```
 
 ---
 
-## Configuração nos outros PCs
+## Outro jogador quer jogar (segundo PC)
 
-Cada jogador faz isso uma vez:
-
+### Primeira vez
 ```bat
 git clone https://github.com/SEU_USUARIO/SEU_REPO.git
+cd server_lan_mine_github
 ```
 
-Isso baixa a pasta do mundo. Depois mova/copie ela para:
+Depois:
+1. Instalar NeoForge server em `server/` (baixar o installer e rodar)
+2. Colocar a instância CurseForge em `server/minecraft server 1.21.1/`
+3. Rodar `python server_setup.py` para copiar os mods
+4. Criar `config.json` com seu nome e senha RCON
+5. Rodar `python sync.py start`
+
+### Nas próximas vezes
+```bat
+python sync.py start
 ```
-C:\Users\NOME\AppData\Roaming\.minecraft\saves\
-```
 
-Configure o `config.json` com o `world_path` apontando para lá, e com o seu próprio `player_name`.
-
-Na hora de jogar: `python sync.py start` — ele já faz pull automático antes de verificar o lock.
-
----
-
-## O que o script detecta para saber que o jogo fechou?
-
-O Minecraft mantém um arquivo `session.lock` dentro da pasta do mundo **aberto** e o atualiza a cada ~5 segundos enquanto estiver rodando. Quando você fecha o mundo (ou o jogo), o arquivo para de ser atualizado.
-
-O script monitora isso: se o `session.lock` ficar sem atualização por mais de 15 segundos → considera que o jogo fechou → commita.
-
----
-
-## Estrutura de arquivos
-
-```
-.minecraft/saves/NomeDoMundo/   ← repo git fica aqui
-  ├── .git/
-  ├── .gitignore                ← ignora session.lock e .tmp
-  ├── status.json               ← o "lock" — rastreado pelo git
-  ├── level.dat                 ← dados do mundo
-  ├── region/                   ← chunks
-  └── playerdata/               ← dados dos jogadores
-
-server_lan_mine_github/         ← a ferramenta fica aqui (fora do mundo)
-  ├── sync.py
-  ├── config.json               ← seu config local (gitignored aqui)
-  └── requirements.txt
-```
+O pull já é feito automaticamente no início do `start`.
 
 ---
 
 ## Regra de ouro
 
-> **Nunca abra o mundo no Minecraft antes de rodar `python sync.py start`.**  
-> Se abrir direto, o lock não vai ser registrado e outra pessoa pode sobrescrever o mundo.
+> Sempre use `python sync.py start` para iniciar o servidor.  
+> Nunca suba o servidor direto pelo `run.bat` — o lock não será registrado e o mundo não será salvo no GitHub.
