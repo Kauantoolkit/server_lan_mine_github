@@ -87,3 +87,6 @@ server_setup.exe
 #  server_setup.py
 #  requirements.txt
 # ══════════════════════════════════════════════════════════════════════════════
+
+# Claude Code local settings
+.claude/
