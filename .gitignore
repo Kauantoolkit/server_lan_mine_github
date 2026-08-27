@@ -88,5 +88,9 @@ server_setup.exe
 #  requirements.txt
 # ══════════════════════════════════════════════════════════════════════════════
 
+# ── Installer do NeoForge (redownloadável) ────────────────────────────────────
+server/neoforge-*-installer.jar
+server/neoforge-*-installer.jar.log
+
 # Claude Code local settings
 .claude/

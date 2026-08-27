@@ -459,11 +459,20 @@ Comandos:
 
     config = load_config(args.config)
 
-    match args.command:
-        case "start":         cmd_start(config)
-        case "status":        cmd_status(config)
-        case "force-release": cmd_force_release(config)
-        case "setup":         cmd_setup(config)
+    pause = getattr(sys, 'frozen', False) and args.command != "start"
+
+    try:
+        match args.command:
+            case "start":         cmd_start(config)
+            case "status":        cmd_status(config)
+            case "force-release": cmd_force_release(config)
+            case "setup":         cmd_setup(config)
+    except Exception as e:
+        print(f"\n❌ Erro inesperado: {e}")
+        pause = getattr(sys, 'frozen', False)
+    finally:
+        if pause:
+            input("\nPressione Enter para fechar...")
 
 
 if __name__ == "__main__":

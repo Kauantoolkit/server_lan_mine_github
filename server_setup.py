@@ -201,4 +201,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(f"\n❌ Erro inesperado: {e}")
+    finally:
+        if getattr(sys, 'frozen', False):
+            input("\nPressione Enter para fechar...")
